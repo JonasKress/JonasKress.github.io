@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+	<title>Wikidata Series</title>
+
+	<!-- build:css css/style.min.css -->
+	<link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css">
+	<link rel="stylesheet" href="../../node_modules/ekko-lightbox/dist/ekko-lightbox.css">
+	<link rel="stylesheet" href="../../node_modules/bootstrap-table/dist/bootstrap-table.css">
+	<link rel="stylesheet" href="../../node_modules/leaflet/dist/leaflet.css">
+	<link rel="stylesheet" href="../../node_modules/leaflet-fullscreen/dist/leaflet.fullscreen.css">
+	<link rel="stylesheet" href="../../node_modules/leaflet-zoombox/L.Control.ZoomBox.css">
+	<link rel="stylesheet" href="../../node_modules/leaflet.markercluster/dist/MarkerCluster.css">
+	<link rel="stylesheet" href="../../node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css">
+	<link rel="stylesheet" href="../../node_modules/leaflet.locatecontrol/dist/L.Control.Locate.css">
+	<link rel="stylesheet" href="../../node_modules/leaflet-minimap/dist/Control.MiniMap.min.css">
+	<link rel="stylesheet" href="../../node_modules/select2/dist/css/select2.css">
+	<link rel="stylesheet" href="../../node_modules/vis/dist/vis.css">
+	<link rel="stylesheet" href="../../node_modules/jstree/dist/themes/default/style.css" />
+	<!-- endbuild -->
+
+	<link rel="stylesheet/less" type="text/css" href="../../style.less">
+	<script src="../../node_modules/less/dist/less.js" data-env="development"></script>
+	<script>less.watch()</script>
+
+	<link rel="shortcut icon" href="//www.wikidata.org/static/favicon/testwikidata.ico">
+	<!-- build:js js/shim.min.js -->
+	<script src="../../node_modules/es6-shim/es6-shim.js"></script>
+	<!-- endbuild -->
+</head>
+<body>
+
+
+	<!-- JS vendor files -->
+	<script src="../../node_modules/jquery/dist/jquery.js"></script>
+	<script src="../../node_modules/underscore/underscore.js"></script>
+	<script src="../../node_modules/bootstrap/dist/js/bootstrap.js"></script>
+	<script src="../../node_modules/ekko-lightbox/dist/ekko-lightbox.js"></script>
+	<script src="../../node_modules/leaflet/dist/leaflet.js"></script>
+	<script src="../../node_modules/leaflet-fullscreen/dist/Leaflet.fullscreen.js"></script>
+	<script src="../../node_modules/leaflet-zoombox/L.Control.ZoomBox.js"></script>
+	<script src="../../node_modules/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+	<script src="../../node_modules/leaflet.locatecontrol/dist/L.Control.Locate.min.js"></script>
+	<script src="../../node_modules/leaflet-minimap/dist/Control.MiniMap.min.js"></script>
+	<script src="../../node_modules/moment/min/moment-with-locales.js"></script>
+	<script src="../../node_modules/wellknown/wellknown.js"></script>
+	<script src="../../node_modules/d3/d3.js"></script>
+	<script src="../../node_modules/select2/dist/js/select2.js"></script>
+	<script src="../../vendor/sparqljs/dist/sparqljs-browser-min.js"></script>
+	<script src="../../node_modules/vis/dist/vis.js"></script>
+	<script src="../../node_modules/jstree/dist/jstree.js"></script>
+	<script src="../../node_modules/dimple-js/dist/dimple.latest.js"></script>
+	<script src="../../node_modules/bootstrap-table/dist/bootstrap-table.js"></script>
+	<script src="../../node_modules/bootstrap-table/dist/extensions/mobile/bootstrap-table-mobile.js"></script>
+	<script src="../../node_modules/bootstrap-table/dist/extensions/key-events/bootstrap-table-key-events.js"></script>
+	<script src="../../node_modules/bootstrap-table/dist/extensions/cookie/bootstrap-table-cookie.js"></script>
+
+	<!-- JS files -->
+	<script src="../../wikibase/queryService/api/Sparql.js"></script>
+	<script src="../../wikibase/queryService/api/CodeSamples.js"></script>
+	<script src="../../wikibase/queryService/api/QuerySamples.js"></script>
+	<script src="../../wikibase/queryService/api/Wikibase.js"></script>
+	<script src="../../wikibase/queryService/api/Tracking.js"></script>
+	<script src="../../wikibase/queryService/RdfNamespaces.js"></script>
+	<script src="../../wikibase/queryService/ui/resultBrowser/helper/FormatterHelper.js"></script>
+	<script src="../../wikibase/queryService/ui/resultBrowser/helper/Options.js"></script>
+	<script src="../../wikibase/queryService/ui/queryHelper/SparqlQuery.js"></script>
+	<script src="../../wikibase/queryService/ui/queryHelper/SelectorBox.js"></script>
+	<script src="../../wikibase/queryService/ui/resultBrowser/AbstractResultBrowser.js"></script>
+	<script src="../../wikibase/queryService/ui/resultBrowser/AbstractChartResultBrowser.js"></script>
+	<script src="../../wikibase/queryService/ui/resultBrowser/AbstractDimpleChartResultBrowser.js"></script>
+	<script src="../../wikibase/queryService/ui/resultBrowser/CoordinateResultBrowser.js"></script>
+	<script src="../../wikibase/queryService/ui/resultBrowser/ImageResultBrowser.js"></script>
+	<script src="../../wikibase/queryService/ui/resultBrowser/TimelineResultBrowser.js"></script>
+	<script src="../../wikibase/queryService/ui/resultBrowser/TreeResultBrowser.js"></script>
+	<script src="../../wikibase/queryService/ui/resultBrowser/BarChartResultBrowser.js"></script>
+	<script src="../../wikibase/queryService/ui/resultBrowser/TableResultBrowser.js"></script>
+	<style>
+		.select2 {
+			min-width: 200px;
+		}
+		.item {
+			height: 98vh;
+			width: 98vw;
+		}
+		iframe {
+			height: 98vh;
+			width: 98vw;
+		}
+		.carousel-control {
+			width: 2em;
+		}
+	</style>
+	<nav class="navbar navbar-default navbar-fixed-bottom">
+	<div class="container-fluid">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+		<a class="navbar-brand" href="#">Wikidata Series</a>
+		</div>
+
+	
+		<ul class="nav navbar-nav navbar-right">
+			<li><div class="selector" data-type="item" data-sparql="SELECT * WHERE {  ?id wdt:P31 wd:Q5398426. ?id wdt:P4983 ?count. } limit 200 "></div></li>
+		</ul>
+		</div><!-- /.navbar-collapse -->
+	</div><!-- /.container-fluid -->
+	</nav>
+
+
+
+<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+  <!-- Wrapper for slides -->
+<div class="carousel-inner" role="listbox">
+	<div class="item active">
+		<div class="carousel-caption">
+			 <h3>Characters Map</h3>
+		</div>
+		<div><div class="characters-map"></div> </div>
+	</div>
+	<div class="item">
+		<div class="carousel-caption">
+			 <h3>Characters</h3>
+		</div>
+		<div class="characters"></div>
+	</div>
+	<div class="item">
+		<div class="carousel-caption">
+			 <h3>Characters Gender</h3>
+		</div>
+		<div class="characters-gender"></div>
+	</div>	
+	<div class="item">
+		<div class="carousel-caption">
+			 <h3>Awards</h3>
+		</div>
+		<div class="awards"></div>
+	</div>
+	<div class="item">
+		<div class="carousel-caption">
+			 <h3>Parts</h3>
+		</div>
+		<div class="parts"></div>
+	</div>
+	<div class="item">
+		<div class="carousel-caption">
+			 <h3>Data</h3>
+		</div>
+		<div class="data"></div>
+	</div>
+
+  <!-- Controls -->
+  <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
+	
+	<script type="text/javascript">
+	var SPARQL = {
+		CHARACTERS: 'SELECT ?characters ?charactersLabel ?image WHERE {  BIND({ID} AS ?s)  ?s wdt:P674 ?characters.  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }   ?characters wdt:P18 ?image.  }',
+		CHARACTERS_COUNTRY : 'SELECT ?characters ?charactersLabel ?country ?countryLabel ?image ?coordinates WHERE {  BIND({ID} AS ?s)  ?s wdt:P674 ?characters.  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }  OPTIONAL { ?characters wdt:P18 ?image. }  ?characters wdt:P27 ?country.  ?country wdt:P625 ?coordinates.}',
+		CHARACTERS_GENDER : 'SELECT ?genderLabel (1 as ?count) WHERE {  BIND({ID} AS ?s)  ?s wdt:P674 ?characters  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }  ?characters wdt:P21 ?gender.}',
+		AWARDS: 'SELECT ?award ?awardLabel ?time WHERE {  BIND({ID} AS ?s)  ?s wdt:P166 ?award.  ?s p:P166 ?awardStat.  ?awardStat pq:P585 ?time.  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }}',
+		PARTS: 'SELECT ?parts ?partsLabel  ?parts2 ?parts2Label WHERE {  BIND({ID} AS ?s)  ?s wdt:P527 ?parts.  ?parts wdt:P527 ?parts2.   SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }}ORDER BY ?partsLabel',
+		DATA: 'SELECT ?propUrl ?propLabel ?valUrl ?valLabel ?picture WHERE{	hint:Query hint:optimizer "None" .	{	BIND(wd:Q147235 AS ?valUrl) .		BIND("N/A" AS ?propUrl ) .		BIND("identity"@en AS ?propLabel ) .	}	UNION	{	wd:Q147235?propUrl ?valUrl .		?property ?ref ?propUrl .		?property rdf:type wikibase:Property .		?property rdfs:label ?propLabel	}	 	?valUrl rdfs:label ?valLabel	FILTER (LANG(?valLabel) = "en") .	OPTIONAL{ ?valUrl wdt:P18 ?picture .}	FILTER (lang(?propLabel) = "en" )}ORDER BY ?propUrl ?valUrl'
+	};
+	/* JS Code */
+	$(document).ready(function() {
+
+		$('.carousel').carousel({
+});
+
+		function renderResult( id, $element, query, type ) {
+			// $element.html( '' );
+			// id = 'wd:' + id;
+			// var api = new wikibase.queryService.api.Sparql();
+			// try {
+			// 	api.query( query.replace( '{ID}', id ) ).done(function() {
+			// 		var result = new wikibase.queryService.ui.resultBrowser[ type + 'ResultBrowser' ]();
+			// 		result.setResult(api.getResultRawData());
+			// 		result.draw( $element );
+			// 	});
+			// } catch (error) {
+			// 	console.log( error );
+			// }
+
+			var embedUrl = '../../embed.html#' + encodeURIComponent( '#defaultView:' + type + '\n' + query.replace( '{ID}',  'wd:' + id ) );
+
+			$element.html( $( '<iframe frameBorder="0" scrolling="no"></iframe>' ).attr( 'src', embedUrl ) );
+
+		}
+
+		function draw( id ) {
+			renderResult( id, $('.characters'), SPARQL.CHARACTERS, 'ImageGrid' );
+			renderResult( id, $('.characters-map'), SPARQL.CHARACTERS_COUNTRY, 'Map' );
+			renderResult( id, $('.characters-gender'), SPARQL.CHARACTERS_GENDER, 'BarChart' );
+			renderResult( id, $('.awards'), SPARQL.AWARDS, 'Timeline' );
+			renderResult( id, $('.parts'), SPARQL.PARTS, 'Tree' );
+			renderResult( id, $('.data'), SPARQL.DATA, 'Table' );
+		}
+
+		box = new wikibase.queryService.ui.queryHelper.SelectorBox();
+		$('.selector' ).data( 'sparql' )
+		box.add( $( '.selector' ), null, function( id, name, update ) {
+			location.hash = id;
+			draw( id );
+		} );
+
+
+		draw( location.hash.replace( '#', '' ) );
+
+
+	} );
+	</script>
+</body>
+</html>
